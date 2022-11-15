@@ -31,6 +31,18 @@ const userSchema = Joi.object({
             .string()
             .min(3)
             .required(),
+    password: Joi
+            .string()
+            .min(8)
+            .max(30)
+            .required()
+}).options({ abortEarly: false });
+
+const registerSchema = Joi.object({
+    name: Joi
+            .string()
+            .min(3)
+            .required(),
     email: Joi
             .string()
             .email()
@@ -54,8 +66,28 @@ const walletSchema = Joi.object({
 }).options({ abortEarly: false });
 
 // routes
-app.post('/sign-in', (req, res) => {
+app.post('/sign-in', async (req, res) => {
+    const { name, password } = req.body;
 
+    const { error } = userSchema.validate({ name, password });
+
+    if (error) {
+        res.status(422).send(error.details.map(error => error.message));
+        return;
+    }
+
+    const user = await usersCollection.findOne({ name });
+
+    if (user) {
+        res.status(409).send('Este usuário já está logado')
+    }
+
+    try {
+        await usersCollection.insertOne({ name, password });
+        res.status(200).send('Usuario logado com sucesso');
+    } catch (err) {
+        res.status(500).send('Erro ao salvar informações no banco de dados')
+    }
 });
 
 app.post('/sign-up', (req, res) => {
