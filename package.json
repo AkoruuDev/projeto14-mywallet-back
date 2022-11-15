@@ -1,0 +1,20 @@
+{
+  "name": "projeto14-mywallet-back",
+  "version": "1.0.0",
+  "description": "A back end project about a digital wallet",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "npx nodemon src/app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkoruuDev/projeto14-mywallet-back.git"
+  },
+  "author": "Akoruu Dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AkoruuDev/projeto14-mywallet-back/issues"
+  },
+  "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme"
+}
