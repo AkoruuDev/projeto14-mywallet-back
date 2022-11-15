@@ -46,7 +46,6 @@ const registerSchema = Joi.object({
     email: Joi
             .string()
             .email()
-            .min(15)
             .required(),
     password: Joi
             .string()
@@ -66,7 +65,7 @@ const walletSchema = Joi.object({
 }).options({ abortEarly: false });
 
 // routes
-app.post('/sign-in', async (req, res) => {
+app.post('/sign-in', async (req, res) => { // return userList without password { name, email, token }
     const { name, password } = req.body;
 
     const { error } = userSchema.validate({ name, password });
@@ -90,8 +89,29 @@ app.post('/sign-in', async (req, res) => {
     }
 });
 
-app.post('/sign-up', (req, res) => {
+app.post('/sign-up', async (req, res) => { // add token
+    const { name, email, password } = req.body;
 
+    const { error } = registerSchema.validate({ name, email, password });
+
+    if (error) {
+        res.status(422).send(error.details.map(error => error.message));
+        return;
+    }
+
+    const registerExists = await usersCollection.findOne({ email });
+
+    if (registerExists) {
+        res.status(422).send('Este email já está cadastrado');
+        return;
+    }
+
+    try {
+        await usersCollection.insertOne({ name, password, email });
+        res.status(201).send('Usuario cadastrado com sucesso')
+    } catch (err) {
+        res.status(500).send('Erro ao mandar registo para o servidor')
+    }
 });
 
 app.get('/historic', (req, res) => {
