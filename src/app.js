@@ -32,6 +32,7 @@ const userSchema = Joi.object({
             .min(3)
             .required(),
     email: Joi
+            .string()
             .email()
             .min(15)
             .required(),
@@ -39,9 +40,6 @@ const userSchema = Joi.object({
             .string()
             .min(8)
             .max(30)
-            .required(),
-    passwordConfirm: Joi
-            .valid(password)
             .required()
 }).options({ abortEarly: false });
 
