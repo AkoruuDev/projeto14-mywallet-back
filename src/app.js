@@ -8,13 +8,14 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 const mongoClient = new MongoClient(process.env.MONGO_URI);
+const port = process.env.PORT;
 let db;
 
 // connect
 try {
     await mongoClient.connect();
-    db = mongoClient.db('mywallet.uu');
-    console.log(`MongoDB connected on mywallet.uu db`);
+    db = mongoClient.db('mywallet-uu');
+    console.log(`MongoDB connected on mywallet-uu db`);
 } catch (err) {
     console.log(err);
 }
@@ -44,6 +45,6 @@ app.post('/output', (req, res) => {
 
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
