@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+import Joi from "joi";
 
 const app = express();
 
@@ -23,6 +24,36 @@ try {
 // collections
 const usersCollection = db.collection('users');
 const historicCollection = db.collection('historic');
+
+// joi verify
+const userSchema = Joi.object({
+    name: Joi
+            .string()
+            .min(3)
+            .required(),
+    email: Joi
+            .email()
+            .min(15)
+            .required(),
+    password: Joi
+            .string()
+            .min(8)
+            .max(30)
+            .required(),
+    passwordConfirm: Joi
+            .valid(password)
+            .required()
+}).options({ abortEarly: false });
+
+const walletSchema = Joi.object({
+    value: Joi
+            .number()
+            .required(),
+    description: Joi
+            .string()
+            .min(1)
+            .required()
+}).options({ abortEarly: false });
 
 // routes
 app.post('/sign-in', (req, res) => {
