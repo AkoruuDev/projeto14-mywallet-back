@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import Joi from "joi";
+import bcrypt from "bcrypt";
 
 const app = express();
 
@@ -27,9 +28,9 @@ const historicCollection = db.collection('historic');
 
 // joi verify
 const userSchema = Joi.object({
-    name: Joi
+    email: Joi
             .string()
-            .min(3)
+            .email()
             .required(),
     password: Joi
             .string()
@@ -66,24 +67,28 @@ const walletSchema = Joi.object({
 
 // routes
 app.post('/sign-in', async (req, res) => { // return userList without password { name, email, token }
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
-    const { error } = userSchema.validate({ name, password });
+    const { error } = userSchema.validate({ email, password });
 
     if (error) {
         res.status(422).send(error.details.map(error => error.message));
         return;
     }
 
-    const user = await usersCollection.findOne({ name });
+    const user = await usersCollection.findOne({ email });
 
     if (user) {
         res.status(409).send('Este usuário já está logado')
     }
 
     try {
-        await usersCollection.insertOne({ name, password });
-        res.status(200).send('Usuario logado com sucesso');
+        const bcpass = bcrypt.compareSync(user.password, password);
+        
+        if (email && bcpass) {
+            await usersCollection.insertOne({ email, password });
+            res.status(200).send('Usuario logado com sucesso');
+        }
     } catch (err) {
         res.status(500).send('Erro ao salvar informações no banco de dados')
     }
