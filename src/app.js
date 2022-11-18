@@ -150,8 +150,21 @@ app.get('/historic', async (req, res) => {
     }
 });
 
-app.post('/input', (req, res) => {
+app.post('/input', async (req, res) => {
+    const { title, description, value } = req.body;
+    const { authorization } = req.headers;
 
+    const money = Number(value);
+    const token = authorization.replace('Bearer ', '');
+
+    try {
+        const item = await walletSchema.findOne({ token });
+        await item.wallet.insertOne({ title, description, money });
+    
+        res.status(201).send('Salvo com sucesso')
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 app.post('/output', (req, res) => {
