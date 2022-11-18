@@ -55,7 +55,7 @@ const registerSchema = Joi.object({
             .required()
 }).options({ abortEarly: false });
 
-const walletSchema = Joi.object({
+const newWalletSchema = Joi.object({
     value: Joi
             .number()
             .required(),
@@ -65,6 +65,12 @@ const walletSchema = Joi.object({
             .min(2),
     description: Joi
             .string()
+}).options({ abortEarly: false });
+
+const walletSchema = Joi.object({
+    authorization: Joi
+            .string()
+            .required()
 }).options({ abortEarly: false });
 
 // routes
@@ -125,8 +131,23 @@ app.post('/sign-up', async (req, res) => { // add token
     }
 });
 
-app.get('/historic', (req, res) => {
+app.get('/historic', async (req, res) => {
+    const { authorization } = req.headers;
 
+    const { error } = walletSchema.validate({ authorization });
+    if (error) {
+        res.status(422).send(error.details.map(err => err.message));
+        return;
+    }
+
+    const token = authorization.replace('Bearer ', '');
+
+    try {
+        const list = await walletSchema.findOne({ token });
+        res.status(200).send(list);
+    } catch (err) {
+        res.status(500).send('Erro ao encontrar carteira do usuário');
+    }
 });
 
 app.post('/input', (req, res) => {
