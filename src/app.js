@@ -10,7 +10,7 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 const mongoClient = new MongoClient(process.env.MONGO_URI);
-const port = process.env.PORT;
+const port = process.env.PORT || 2323;
 let db;
 
 // connect
@@ -90,11 +90,12 @@ app.post('/sign-in', async (req, res) => { // return userList without password {
     const user = await usersCollection.findOne({ email });
 
     if (user) {
-        res.status(409).send('Este usuário já está logado')
+        res.status(409).send('Este usuário já está logado');
+        return;
     }
 
     try {
-        const bcpass = bcrypt.compareSync(user.password, password);
+        const bcpass = bcrypt.compareSync(password, user.password);
         console.log(user.password)
         console.log(password)
         console.log(bcpass);
