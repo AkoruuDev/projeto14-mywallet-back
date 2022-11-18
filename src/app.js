@@ -59,10 +59,12 @@ const walletSchema = Joi.object({
     value: Joi
             .number()
             .required(),
+    title: Joi
+            .string()
+            .required()
+            .min(2),
     description: Joi
             .string()
-            .min(1)
-            .required()
 }).options({ abortEarly: false });
 
 // routes
@@ -84,10 +86,12 @@ app.post('/sign-in', async (req, res) => { // return userList without password {
 
     try {
         const bcpass = bcrypt.compareSync(user.password, password);
-        
+        console.log(user.password)
+        console.log(password)
+        console.log(bcpass);
         if (email && bcpass) {
-            await usersCollection.insertOne({ email, password });
-            res.status(200).send('Usuario logado com sucesso');
+            res.status(200).send(user);
+            return;
         }
     } catch (err) {
         res.status(500).send('Erro ao salvar informações no banco de dados')
@@ -112,7 +116,9 @@ app.post('/sign-up', async (req, res) => { // add token
     }
 
     try {
-        await usersCollection.insertOne({ name, password, email });
+        const bcpass = bcrypt.hashSync(password, 10);
+
+        await usersCollection.insertOne({ name, password: bcpass, email });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
