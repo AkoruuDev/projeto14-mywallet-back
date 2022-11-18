@@ -64,7 +64,10 @@ const newWalletSchema = Joi.object({
             .required()
             .min(2),
     description: Joi
+            .string(),
+    authorization: Joi
             .string()
+            .required()
 }).options({ abortEarly: false });
 
 const walletSchema = Joi.object({
@@ -121,10 +124,13 @@ app.post('/sign-up', async (req, res) => { // add token
         return;
     }
 
+    const token = 'Bearer 73657821238902231211';
+
     try {
         const bcpass = bcrypt.hashSync(password, 10);
 
-        await usersCollection.insertOne({ name, password: bcpass, email });
+        await usersCollection.insertOne({ name, password: bcpass, email, token });
+        await walletSchema.insertOne({ name, email, token, wallet: {} });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
@@ -143,7 +149,7 @@ app.get('/historic', async (req, res) => {
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const list = await walletSchema.findOne({ token });
+        const list = await historicCollection.findOne({ token });
         res.status(200).send(list);
     } catch (err) {
         res.status(500).send('Erro ao encontrar carteira do usuário');
@@ -154,11 +160,17 @@ app.post('/input', async (req, res) => {
     const { title, description, value } = req.body;
     const { authorization } = req.headers;
 
+    const { error } = newWalletSchema.validate({ title, description, value, authorization });
+
+    if (error) {
+        res.send(error.details.map(err => err.message))
+    }
+
     const money = Number(value);
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const item = await walletSchema.findOne({ token });
+        const item = await historicCollection.findOne({ token });
         await item.wallet.insertOne({ title, description, money, isInput: true });
     
         res.status(201).send('Salvo com sucesso')
@@ -171,11 +183,17 @@ app.post('/output', async (req, res) => {
     const { title, description, value } = req.body;
     const { authorization } = req.headers;
 
+    const { error } = newWalletSchema.validate({ title, description, value, authorization });
+
+    if (error) {
+        res.send(error.details.map(err => err.message))
+    }
+
     const money = Number(value);
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const item = await walletSchema.findOne({ token });
+        const item = await historicCollection.findOne({ token });
         await item.wallet.insertOne({ title, description, money, isInput: false });
     
         res.status(201).send('Salvo com sucesso')
