@@ -204,6 +204,15 @@ app.post('/output', async (req, res) => {
 
 });
 
+app.delete('/logoff', async (req, res) => {
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+
+    const user = await logCollection.findOne({ token });
+    user.delete()
+    res.status(200).send('Usuário deslogado com sucesso');
+})
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
