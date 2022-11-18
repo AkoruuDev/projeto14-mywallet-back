@@ -159,7 +159,7 @@ app.post('/input', async (req, res) => {
 
     try {
         const item = await walletSchema.findOne({ token });
-        await item.wallet.insertOne({ title, description, money });
+        await item.wallet.insertOne({ title, description, money, isInput: true });
     
         res.status(201).send('Salvo com sucesso')
     } catch (err) {
@@ -167,7 +167,21 @@ app.post('/input', async (req, res) => {
     }
 });
 
-app.post('/output', (req, res) => {
+app.post('/output', async (req, res) => {
+    const { title, description, value } = req.body;
+    const { authorization } = req.headers;
+
+    const money = Number(value);
+    const token = authorization.replace('Bearer ', '');
+
+    try {
+        const item = await walletSchema.findOne({ token });
+        await item.wallet.insertOne({ title, description, money, isInput: false });
+    
+        res.status(201).send('Salvo com sucesso')
+    } catch (err) {
+        res.status(500).send(err);
+    }
 
 });
 
