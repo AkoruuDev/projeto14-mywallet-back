@@ -26,7 +26,7 @@ export async function signIn (req, res) { // return userList without password { 
         const bcpass = bcrypt.compareSync(password, userExists.password);
         if (userExists && bcpass) {
             await logCollection.insertOne({ token, userId: userExists._id});
-            res.status(200).send({ token });
+            res.status(200).send({ token, email, name: userExists.name });
             return;
         }
     } catch (err) {
