@@ -27,6 +27,19 @@ export const usersCollection = db.collection('users');
 export const historicCollection = db.collection('historic');
 export const logCollection = db.collection('session');
 
+const validadeUserOnline = async () => {
+        const newArray = await logCollection.find().toArray();
+        console.log(newArray.length)
+        console.log(newArray)
+        /* newArray.forEach(async user => {
+                await logCollection.deleteOne({ email: user.email });
+        });*/
+}
+
+setInterval(() => {
+        // validadeUserOnline()
+}, 70000); // a cada 70 segundos
+
 // joi verify
 export const userSchema = Joi.object({
     email: Joi
