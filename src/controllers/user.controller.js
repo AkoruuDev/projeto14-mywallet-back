@@ -30,7 +30,7 @@ export async function signIn (req, res) { // return userList without password { 
             return;
         }
     } catch (err) {
-        res.status(500).send('Erro ao salvar informações no banco de dados')
+        res.status(500).send('Erro ao fazer login')
     }
 };
 
@@ -57,7 +57,7 @@ export async function signUp(req, res) {
         await usersCollection.insertOne({ name, password: bcpass, email });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
-        res.status(500).send('Erro ao mandar registo para o servidor')
+        res.status(500).send('Erro ao fazer registro')
     }
 };
 
