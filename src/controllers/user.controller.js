@@ -5,6 +5,7 @@ import { userSchema, walletSchema, registerSchema } from "../app.js";
 
 export async function signIn (req, res) { // return userList without password { name, email, token }
     const { email, password } = req.body;
+    const token = uuid();
 
     const { error } = userSchema.validate({ email, password });
 
@@ -13,7 +14,7 @@ export async function signIn (req, res) { // return userList without password { 
         return;
     }
 
-    const user = await usersCollection.findOne({ email });
+    const user = await logCollection.findOne({ email });
 
     if (user) {
         res.status(409).send('Este usuário já está logado');
@@ -21,12 +22,11 @@ export async function signIn (req, res) { // return userList without password { 
     }
 
     try {
+        const userExists = await usersCollection.findOne({ email });
         const bcpass = bcrypt.compareSync(password, user.password);
-        console.log(user.password)
-        console.log(password)
-        console.log(bcpass);
-        if (email && bcpass) {
-            res.status(200).send(user);
+        if (userExists && bcpass) {
+            await logCollection.insertOne({ token, userId: userExists._id});
+            res.status(200).send({ token });
             return;
         }
     } catch (err) {
@@ -51,13 +51,11 @@ export async function signUp(req, res) { // add token
         return;
     }
 
-    const token = 'Bearer 73657821238902231211';
+    const bcpass = bcrypt.hashSync(password, 10);
 
     try {
-        const bcpass = bcrypt.hashSync(password, 10);
-
-        await usersCollection.insertOne({ name, password: bcpass, email, token });
-        await walletSchema.insertOne({ name, email, token, wallet: {} });
+        await usersCollection.insertOne({ name, password: bcpass, email });
+        await walletSchema.insertOne({ name, email, wallet: [] });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
