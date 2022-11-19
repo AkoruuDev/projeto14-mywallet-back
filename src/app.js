@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { MongoClient } from "mongodb";
 import Joi from "joi";
 import { logoff, signIn, signUp } from "./controllers/user.controller.js";
@@ -9,6 +10,7 @@ const app = express();
 
 // config
 dotenv.config();
+app.use(cors())
 app.use(express.json());
 const mongoClient = new MongoClient(process.env.MONGO_URI);
 let db;
