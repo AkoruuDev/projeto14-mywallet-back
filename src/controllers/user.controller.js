@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { usersCollection, logCollection } from "../app.js";
-import { userSchema, walletSchema, registerSchema } from "../app.js";
+import { usersCollection, logCollection, historicCollection } from "../app.js";
+import { userSchema, registerSchema } from "../app.js";
 
 export async function signIn (req, res) { // return userList without password { name, email, token }
     const { email, password } = req.body;
@@ -55,7 +55,7 @@ export async function signUp(req, res) { // add token
 
     try {
         await usersCollection.insertOne({ name, password: bcpass, email });
-        await walletSchema.insertOne({ name, email, wallet: [] });
+        await historicCollection.insertOne({ userID, name, email, wallet: [] });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
