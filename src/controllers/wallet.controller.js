@@ -14,8 +14,8 @@ export async function historic(req, res) {
 
     try {
         const user = await logCollection.findOne({ token });
-        const id = user.UserId;
-        const list = await historicCollection.findOne({ id });
+        const response = await historicCollection.find().toArray();
+        const list = response.filter(item => item.userId === user.userId);
 
         res.status(200).send(list);
     } catch (err) {
@@ -33,12 +33,13 @@ export async function input(req, res) {
         res.send(error.details.map(err => err.message))
     }
 
-    const money = Number(value);
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const item = await historicCollection.findOne({ token });
-        await item.wallet.insertOne({ title, description, money, isInput: true });
+        const user = await logCollection.findOne({ token });
+        console.log(user);
+        historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: true });
+        console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
     } catch (err) {
@@ -56,16 +57,16 @@ export async function output(req, res) {
         res.send(error.details.map(err => err.message))
     }
 
-    const money = Number(value);
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const item = await historicCollection.findOne({ token });
-        await item.wallet.insertOne({ title, description, money, isInput: false });
+        const user = await logCollection.findOne({ token });
+        console.log(user);
+        historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: false });
+        console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
     } catch (err) {
         res.status(500).send(err);
     }
-
 };

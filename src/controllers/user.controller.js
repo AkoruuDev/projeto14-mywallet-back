@@ -34,7 +34,7 @@ export async function signIn (req, res) { // return userList without password { 
     }
 };
 
-export async function signUp(req, res) { // add token
+export async function signUp(req, res) {
     const { name, email, password } = req.body;
 
     const { error } = registerSchema.validate({ name, email, password });
@@ -55,9 +55,6 @@ export async function signUp(req, res) { // add token
 
     try {
         await usersCollection.insertOne({ name, password: bcpass, email });
-        const userID = await usersCollection.findOne({ email });
-        console.log(userID)
-        historicCollection.insertOne({ _id: new Object(userID._id), name, email, wallet: [] });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
