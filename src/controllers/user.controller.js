@@ -23,7 +23,7 @@ export async function signIn (req, res) { // return userList without password { 
 
     try {
         const userExists = await usersCollection.findOne({ email });
-        const bcpass = bcrypt.compareSync(password, user.password);
+        const bcpass = bcrypt.compareSync(password, userExists.password);
         if (userExists && bcpass) {
             await logCollection.insertOne({ token, userId: userExists._id});
             res.status(200).send({ token });
@@ -55,7 +55,9 @@ export async function signUp(req, res) { // add token
 
     try {
         await usersCollection.insertOne({ name, password: bcpass, email });
-        await historicCollection.insertOne({ userID, name, email, wallet: [] });
+        const userID = await usersCollection.findOne({ email });
+        console.log(userID)
+        historicCollection.insertOne({ _id: new Object(userID._id), name, email, wallet: [] });
         res.status(201).send('Usuario cadastrado com sucesso')
     } catch (err) {
         res.status(500).send('Erro ao mandar registo para o servidor')
