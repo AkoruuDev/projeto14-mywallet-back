@@ -1,5 +1,5 @@
 import { walletSchema, newWalletSchema } from "../app.js";
-import { historicCollection } from "../app.js";
+import { historicCollection, usersCollection, logCollection } from "../app.js";
 
 export async function historic(req, res) {
     const { authorization } = req.headers;
@@ -13,7 +13,10 @@ export async function historic(req, res) {
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const list = await historicCollection.findOne({ token });
+        const user = await logCollection.findOne({ token });
+        const id = user.UserId;
+        const list = await historicCollection.findOne({ id });
+
         res.status(200).send(list);
     } catch (err) {
         res.status(500).send('Erro ao encontrar carteira do usuário');
