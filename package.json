@@ -5,7 +5,8 @@
   "type": "module",
   "main": "src/app.js",
   "scripts": {
-    "dev": "npx nodemon src/app"
+    "dev": "npx nodemon src/app",
+    "mongo": "mongod --dbpath ~/.mongo"
   },
   "repository": {
     "type": "git",
