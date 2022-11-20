@@ -36,8 +36,6 @@ const newWalletSchema = Joi.object({
             .string()
             .required()
             .min(2),
-    description: Joi
-            .string(),
     authorization: Joi
             .string()
             .required()
