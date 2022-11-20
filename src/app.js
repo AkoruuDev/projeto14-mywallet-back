@@ -5,6 +5,8 @@ import { MongoClient } from "mongodb";
 import Joi from "joi";
 import { logoff, signIn, signUp } from "./controllers/user.controller.js";
 import { historic, input, output } from "./controllers/wallet.controller.js";
+import userRouter from "./routes/userRouter.js";
+import walletRouter from "./routes/walletRouter.js";
 
 const app = express();
 
@@ -32,7 +34,6 @@ export const logCollection = db.collection('session');
 const validadeUserOnline = async () => {
         const newArray = await logCollection.find().toArray();
         console.log(newArray.length)
-        console.log(newArray)
         /* newArray.forEach(async user => {
                 await logCollection.deleteOne({ email: user.email });
         });*/
@@ -93,14 +94,8 @@ export const walletSchema = Joi.object({
 }).options({ abortEarly: false });
 
 // routes
-app.post('/sign-in', signIn);
-app.post('/sign-up', signUp);
-
-app.get('/historic', historic);
-app.post('/input', input);
-app.post('/output', output);
-
-app.delete('/logoff', logoff);
+app.use(userRouter);
+app.use(walletRouter);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
