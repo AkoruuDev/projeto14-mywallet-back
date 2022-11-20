@@ -1,5 +1,5 @@
-import { userSchema } from "../tools/JoiSchema";
-import { logCollection, usersCollection } from "../app";
+import { userSchema } from "../tools/JoiSchema.js";
+import { logCollection, usersCollection } from "../app.js";
 import bcrypt from "bcrypt";
 
 export default async function signInValidate(req, res, next) {
