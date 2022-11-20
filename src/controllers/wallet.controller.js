@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { walletSchema, newWalletSchema } from "../app.js";
 import { historicCollection, usersCollection, logCollection } from "../app.js";
 
@@ -38,7 +39,13 @@ export async function input(req, res) {
     try {
         const user = await logCollection.findOne({ token });
         console.log(user);
-        historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: true });
+        const date = {
+            date: dayjs().format('DD/MM'),
+            fullDate: dayjs().format('DD/MM/YYYY'),
+            time: dayjs().format('HH:mm'),
+            weekDay: dayjs().format('dddd')
+        }
+        historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: true, date });
         console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
@@ -62,7 +69,13 @@ export async function output(req, res) {
     try {
         const user = await logCollection.findOne({ token });
         console.log(user);
-        historicCollection.insertOne({ title, description, value: `-${value}`, userId: user.userId, isInput: false });
+        const date = {
+            date: dayjs().format('DD/MM'),
+            fullDate: dayjs().format('DD/MM/YYYY'),
+            time: dayjs().format('HH:mm'),
+            weekDay: dayjs().format('dddd')
+        }
+        historicCollection.insertOne({ title, description, value: `-${value}`, userId: user.userId, isInput: false, date });
         console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
