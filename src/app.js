@@ -2,9 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient } from "mongodb";
-import Joi from "joi";
-import { logoff, signIn, signUp } from "./controllers/user.controller.js";
-import { historic, input, output } from "./controllers/wallet.controller.js";
 import userRouter from "./routes/userRouter.js";
 import walletRouter from "./routes/walletRouter.js";
 
@@ -15,7 +12,7 @@ dotenv.config();
 app.use(cors())
 app.use(express.json());
 const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
+export let db;
 const port = process.env.PORT || 2323;
 
 try {
@@ -26,10 +23,11 @@ try {
     console.log(err);
 }
 
-// collections
-export const usersCollection = db.collection('users');
-export const historicCollection = db.collection('historic');
-export const logCollection = db.collection('session');
+const usersCollection = db.collection('users');
+const historicCollection = db.collection('historic');
+const logCollection = db.collection('session');
+
+export { usersCollection, historicCollection, logCollection }
 
 const validadeUserOnline = async () => {
         const newArray = await logCollection.find().toArray();
@@ -42,56 +40,6 @@ const validadeUserOnline = async () => {
 setInterval(() => {
         // validadeUserOnline()
 }, 70000); // a cada 70 segundos
-
-// joi verify
-export const userSchema = Joi.object({
-    email: Joi
-            .string()
-            .email()
-            .required(),
-    password: Joi
-            .string()
-            .min(8)
-            .max(30)
-            .required()
-}).options({ abortEarly: false });
-
-export const registerSchema = Joi.object({
-    name: Joi
-            .string()
-            .min(3)
-            .required(),
-    email: Joi
-            .string()
-            .email()
-            .required(),
-    password: Joi
-            .string()
-            .min(8)
-            .max(30)
-            .required()
-}).options({ abortEarly: false });
-
-export const newWalletSchema = Joi.object({
-    value: Joi
-            .number()
-            .required(),
-    title: Joi
-            .string()
-            .required()
-            .min(2),
-    description: Joi
-            .string(),
-    authorization: Joi
-            .string()
-            .required()
-}).options({ abortEarly: false });
-
-export const walletSchema = Joi.object({
-    authorization: Joi
-            .string()
-            .required()
-}).options({ abortEarly: false });
 
 // routes
 app.use(userRouter);

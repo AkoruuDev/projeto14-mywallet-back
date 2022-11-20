@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { walletSchema, newWalletSchema } from "../app.js";
-import { historicCollection, usersCollection, logCollection } from "../app.js";
+import { walletSchema, newWalletSchema } from "../tools/JoiSchema.js";
+import { historicCollection, logCollection } from "../app.js";
 
 export async function historic(req, res) {
     const { authorization } = req.headers;

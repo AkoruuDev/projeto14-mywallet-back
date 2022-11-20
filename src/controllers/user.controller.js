@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { usersCollection, logCollection, historicCollection } from "../app.js";
-import { userSchema, registerSchema } from "../app.js";
+import { usersCollection, logCollection } from "../app.js";
+import { userSchema, registerSchema } from "../tools/JoiSchema.js";
 
 export async function signIn (req, res) { // return userList without password { name, email, token }
     const { email, password } = req.body;
