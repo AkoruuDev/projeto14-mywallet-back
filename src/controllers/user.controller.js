@@ -4,31 +4,14 @@ import { usersCollection, logCollection } from "../app.js";
 import { userSchema, registerSchema } from "../tools/JoiSchema.js";
 
 export async function signIn (req, res) { // return userList without password { name, email, token }
-    const { email, password } = req.body;
+    const { email } = req.body;
     const token = uuid();
 
-    const { error } = userSchema.validate({ email, password });
-
-    if (error) {
-        res.status(422).send(error.details.map(error => error.message));
-        return;
-    }
-
-    const user = await logCollection.findOne({ email });
-
-    if (user) {
-        res.status(409).send('Este usuário já está logado');
-        return;
-    }
-
     try {
-        const userExists = await usersCollection.findOne({ email });
-        const bcpass = bcrypt.compareSync(password, userExists.password);
-        if (userExists && bcpass) {
-            await logCollection.insertOne({ token, userId: userExists._id});
-            res.status(200).send({ token, email, name: userExists.name });
-            return;
-        }
+        const user = await usersCollection.findOne({ email });
+        await logCollection.insertOne({ token, userId: user._id});
+        res.status(200).send({ token, email, name: user.name });
+        return;
     } catch (err) {
         res.status(500).send('Erro ao fazer login')
     }
