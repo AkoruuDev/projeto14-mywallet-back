@@ -1,7 +1,7 @@
 import { userSchema } from "../tools/JoiSchema";
 import bcrypt from "bcrypt";
 
-export default async function signUpValidate(req, res, next) {
+export default async function signInValidate(req, res, next) {
     const { email, password } = req.body;
 
     const { error } = userSchema.validate({ email, password });
