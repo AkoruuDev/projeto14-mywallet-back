@@ -15,9 +15,9 @@ export async function historic(req, res) {
     try {
         const user = await logCollection.findOne({ token });
         const response = await historicCollection.find().toArray();
-        const list = response.filter(item => item.userId === user.userId);
+        const historicUser = response.filter(item => String(item.userId) === String(user.userId))
 
-        res.status(200).send(list);
+        res.status(200).send(historicUser);
     } catch (err) {
         res.status(500).send('Erro ao encontrar carteira do usuário');
     }
@@ -62,7 +62,7 @@ export async function output(req, res) {
     try {
         const user = await logCollection.findOne({ token });
         console.log(user);
-        historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: false });
+        historicCollection.insertOne({ title, description, value: `-${value}`, userId: user.userId, isInput: false });
         console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
