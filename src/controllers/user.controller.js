@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { usersCollection, logCollection } from "../app.js";
 import { userSchema, registerSchema } from "../tools/JoiSchema.js";
 
-export async function signIn (req, res) { // return userList without password { name, email, token }
+export async function signIn (req, res) {
     const { email } = req.body;
     const token = uuid();
 

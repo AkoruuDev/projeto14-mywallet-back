@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { logoff, signIn, signUp } from "../controllers/user.controller.js";
-import signUpValidate from "../middleware/signUpValidate.js";
+import signUpValidate from "../middleware/signInValidate.js";
 
 const userRouter = Router();
 
