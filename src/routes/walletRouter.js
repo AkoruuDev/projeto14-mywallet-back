@@ -7,6 +7,6 @@ const walletRouter = Router();
 walletRouter.get('/historic', historicValidate, historic);
 walletRouter.post('/input', requestValidate, input);
 walletRouter.post('/output', requestValidate, output);
-walletRouter.get('/get-item', getItem);
+walletRouter.get('/get-item/:id', getItem);
 
 export default walletRouter;

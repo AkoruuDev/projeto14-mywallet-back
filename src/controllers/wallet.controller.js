@@ -81,10 +81,8 @@ export async function output(req, res) {
 };
 
 export async function getItem(req, res) {
-    const id = req.body;
-    console.log(id)
+    const { id } = req.params;
 
-    console.log('OIoi')
     const response = await historicCollection.find().toArray();
     const item = response.filter(i => String(i._id) === String(id))
     res.send(item)
