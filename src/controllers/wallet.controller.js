@@ -38,7 +38,6 @@ export async function input(req, res) {
 
     try {
         const user = await logCollection.findOne({ token });
-        console.log(user);
         const date = {
             date: dayjs().format('DD/MM'),
             fullDate: dayjs().format('DD/MM/YYYY'),
@@ -46,7 +45,6 @@ export async function input(req, res) {
             weekDay: dayjs().format('dddd')
         }
         historicCollection.insertOne({ title, description, value, userId: user.userId, isInput: true, date });
-        console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
     } catch (err) {
@@ -68,7 +66,6 @@ export async function output(req, res) {
 
     try {
         const user = await logCollection.findOne({ token });
-        console.log(user);
         const date = {
             date: dayjs().format('DD/MM'),
             fullDate: dayjs().format('DD/MM/YYYY'),
@@ -76,7 +73,6 @@ export async function output(req, res) {
             weekDay: dayjs().format('dddd')
         }
         historicCollection.insertOne({ title, description, value: `-${value}`, userId: user.userId, isInput: false, date });
-        console.log(await historicCollection.find().toArray())
     
         res.status(201).send('Salvo com sucesso')
     } catch (err) {
