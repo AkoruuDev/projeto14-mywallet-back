@@ -79,3 +79,13 @@ export async function output(req, res) {
         res.status(500).send(err);
     }
 };
+
+export async function getItem(req, res) {
+    const id = req.body;
+    console.log(id)
+
+    console.log('OIoi')
+    const response = await historicCollection.find().toArray();
+    const item = response.filter(i => String(i._id) === String(id))
+    res.send(item)
+}
