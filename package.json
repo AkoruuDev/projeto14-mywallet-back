@@ -1,31 +1,29 @@
 {
-  "name": "projeto14-mywallet-back",
-  "version": "1.0.0",
-  "description": "A back end project about a digital wallet",
-  "type": "module",
-  "main": "src/app.js",
-  "scripts": {
-    "dev": "npx nodemon src/app",
-    "mongo": "mongod --dbpath ~/.mongo"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AkoruuDev/projeto14-mywallet-back.git"
-  },
-  "author": "Akoruu Dev",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/AkoruuDev/projeto14-mywallet-back/issues"
-  },
-  "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme",
-  "dependencies": {
-    "bcrypt": "^5.1.0",
-    "cors": "^2.8.5",
-    "dayjs": "^1.11.6",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "joi": "^17.7.0",
-    "mongodb": "^4.11.0",
-    "uuid": "^9.0.0"
-  }
+    "name": "projeto14-mywallet-back",
+    "version": "2.0.0",
+    "description": "A back end project about a digital wallet",
+    "type": "module",
+    "main": "src/server.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "update": "nvm use v18.13.0",
+        "dist": "npx tsc",
+        "dev": "npx nodemon src/server.ts",
+        "npm-start:back": "npm i express cors dotenv jsonwebtoken dayjs bcrypt joi",
+        "npm-start:ts": "npm i -D typescript ts-node @types/express @types/cors @types/dotenv",
+        "prisma": "npm i prisma",
+        "prisma:init": "npx prisma init",
+        "prisma:dbpull": "npx prisma db pull",
+        "prisma:generate": "npx prisma generate"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AkoruuDev/projeto14-mywallet-back.git"
+    },
+    "author": "AkoruuDev",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AkoruuDev/projeto14-mywallet-back/issues"
+    },
+    "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme"
 }
