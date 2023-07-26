@@ -9,8 +9,8 @@
         "update": "nvm use v18.13.0",
         "dist": "npx tsc",
         "dev": "npx nodemon src/server.ts",
-        "npm-start:back": "npm i express cors dotenv jsonwebtoken dayjs bcrypt joi",
-        "npm-start:ts": "npm i -D typescript ts-node @types/express @types/cors @types/dotenv",
+        "start:back": "npm i express cors dotenv jsonwebtoken dayjs bcrypt joi",
+        "start:ts": "npm i -D typescript ts-node @types/express @types/cors @types/dotenv",
         "prisma": "npm i prisma",
         "prisma:init": "npx prisma init",
         "prisma:dbpull": "npx prisma db pull",
@@ -25,5 +25,14 @@
     "bugs": {
         "url": "https://github.com/AkoruuDev/projeto14-mywallet-back/issues"
     },
-    "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme"
+    "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "cors": "^2.8.5",
+        "dayjs": "^1.11.9",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "joi": "^17.9.2",
+        "jsonwebtoken": "^9.0.1"
+    }
 }
