@@ -27,6 +27,7 @@
     },
     "homepage": "https://github.com/AkoruuDev/projeto14-mywallet-back#readme",
     "dependencies": {
+        "@prisma/client": "^5.1.1",
         "bcrypt": "^5.1.0",
         "cors": "^2.8.5",
         "dayjs": "^1.11.9",
