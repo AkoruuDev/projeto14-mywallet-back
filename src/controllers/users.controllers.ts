@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import prisma from "../database/index.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { createNewUser } from "../repositories/index.js";
 
 async function signIn (_req: Request, res: Response) {
     const { email, id } = res.locals;
@@ -33,6 +35,11 @@ async function signIn (_req: Request, res: Response) {
 };
 
 function SignUp(req: Request, res: Response) {
+    const {name, email, password} = res.locals;
+
+    const hash = bcrypt.hashSync(password, 10)
+
+    createNewUser(name, email, hash)
     return res.status(httpStatus.OK).send("OK")
 };
 
