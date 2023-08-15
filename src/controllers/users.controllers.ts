@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import prisma from "../database/index.js";
 import jwt from "jsonwebtoken";
 
-export async function signIn (_req: Request, res: Response) {
+async function signIn (_req: Request, res: Response) {
     const { email, id } = res.locals;
     const token = jwt.sign({ id }, process.env.JWT_HASH, { expiresIn: 846000 })
 
@@ -39,3 +39,9 @@ function SignUp(req: Request, res: Response) {
 function LogOff(req: Request, res: Response) {
     return res.status(httpStatus.OK).send("OK")
 };
+
+export {
+    signIn,
+    SignUp,
+    LogOff
+}
