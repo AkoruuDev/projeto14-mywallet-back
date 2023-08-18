@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import prisma from "../database/index.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { createNewUser } from "../repositories/index.js";
+import { createNewUser, deleteToken, findToken } from "../repositories/index.js";
 
 async function signIn (_req: Request, res: Response) {
     const { email, id } = res.locals;
@@ -34,7 +34,7 @@ async function signIn (_req: Request, res: Response) {
     }
 };
 
-function SignUp(req: Request, res: Response) {
+function SignUp(_req: Request, res: Response) {
     const {name, email, password} = res.locals;
 
     const hash = bcrypt.hashSync(password, 10)
@@ -43,7 +43,12 @@ function SignUp(req: Request, res: Response) {
     return res.status(httpStatus.OK).send("OK")
 };
 
-function LogOff(req: Request, res: Response) {
+function LogOff(_req: Request, res: Response) {
+    const { token } = res.locals as { token: string };
+
+    const user = findToken(token)
+    if (user) deleteToken(token)
+
     return res.status(httpStatus.OK).send("OK")
 };
 
